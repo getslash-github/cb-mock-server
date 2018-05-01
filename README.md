@@ -2,7 +2,8 @@
 
 The mock-server is able to serve the contents of two distinct directories:
 
-* `static`: contains static files and sub-folders that are returned directly and are separated by http request methods
+* `static`: contains static files and sub-folders that are returned directly and are separated by 
+   http request methods
 * `dynamic`: contains java script files that are executed
 
 File in the `static` directory MAY have a `.json` extension.
@@ -40,6 +41,21 @@ Considering the following directory structure:
 * `GET /users/567` will execute the `/dynamic/users/567.js` script
 * `DELETE /groups` will execute the `/dynamic/groups/index.js` script
 * `GET /misc/readme.txt` will execute the `/dynamic/misc/readme.txt.js` script
+
+## Example scripts
+
+Scripts must export a `handle` function that takes two parameters, a request and a response parameter.
+```
+exports.handle = function (req, res) {
+  var password = req.body;
+
+  if (password !== 'secret') {
+    res.status(403).send('wrong password');
+  } else {
+    res.send({result: 'ok'});
+  }
+};
+```
 
 
 ## Use cases

@@ -64,7 +64,8 @@ function handleDynamicFiles(req: Request, res: Response, path: string): boolean 
     filePath = pJoin(path, 'index.js');
 
     if (existsSync(filePath) && lstatSync(filePath).isFile()) {
-      return require(filePath).handle(req, res);
+      require(filePath).handle(req, res);
+      return true;
     }
 
     // did not find index file in directory
@@ -73,7 +74,8 @@ function handleDynamicFiles(req: Request, res: Response, path: string): boolean 
 
   filePath = pJoin(path + '.js');
   if (existsSync(filePath) && lstatSync(filePath).isFile()) {
-    return require(filePath).handle(req, res);
+    require(filePath).handle(req, res);
+    return true;
   }
 
   return false;
