@@ -1,5 +1,5 @@
 import * as express from 'express'
-import { Response } from 'express'
+import { Request, Response } from 'express'
 import { existsSync, lstatSync } from 'fs';
 import { join as pJoin } from 'path';
 
@@ -19,6 +19,7 @@ function handleStaticFiles(res: Response, path: string): boolean {
         return true;
       }
 
+      // -- try with .json extension
       filePath = pJoin(path, 'index.json');
       if (existsSync(filePath)) {
         res.sendFile(filePath);
@@ -51,7 +52,23 @@ function handleStaticFiles(res: Response, path: string): boolean {
   return false;
 }
 
-function handleDynamicFiles(res: Response, path: string): boolean {
+function handleDynamicFiles(req: Request, res: Response, path: string): boolean {
+  if (existsSync(path) && lstatSync(path).isDirectory()) {
+    let filePath = pJoin(path, 'index.js');
+
+    if (existsSync(filePath) && lstatSync(filePath).isFile()) {
+      return require(filePath).handle(req, res);
+    }
+
+    // did not find index file in directory
+    return false;
+  }
+
+  let filePath = pJoin(path + '.js');
+  if (existsSync(filePath) && lstatSync(filePath).isFile()) {
+    return require(filePath).handle(req, res);
+  }
+
   return false;
 }
 
@@ -68,7 +85,7 @@ app.all('/*', (req, res) => {
 
   let handled = handleStaticFiles(res, pJoin(staticPath, httpMethod, path));
   if (handled === false) {
-    handled = handleDynamicFiles(res, pJoin(dynamicPath, path));
+    handled = handleDynamicFiles(req, res, pJoin(dynamicPath, path));
   }
 
   if (handled === false) {
