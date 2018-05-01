@@ -1,0 +1,16 @@
+.idea/
+*.iml
+*.log
+*.tmp
+*.tmp.*
+.vscode/
+npm-debug.log*
+*.iml
+
+$RECYCLE.BIN/
+
+.DS_Store
+Thumbs.db
+
+/lib
+/node_modules

@@ -1,0 +1,51 @@
+{
+  "name": "cb-mock-server",
+  "version": "1.0.0",
+  "description": "Mock server written in Typescript",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codebalancers/cb-mock-server.git"
+  },
+  "keywords": [],
+  "author": "codebalancers",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/codebalancers/cb-mock-server/issues"
+  },
+  "homepage": "https://github.com/codebalancers/cb-mock-server",
+  "scripts": {
+    "clean": "rm -rf lib/",
+    "compile": "tsc",
+    "lint": "tslint --project tslint.json src/**/*.ts",
+    "test": "jest",
+    "build": "npm run clean && npm run lint && npm run test && npm run compile"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__test__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  },
+  "files": [
+    "libs"
+  ],
+  "main": "lib/index.ts",
+  "typings": "lib/index.ts",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/jest": "^22.2.3",
+    "jest": "^22.4.3",
+    "ts-jest": "^22.4.4",
+    "tslint": "^5.9.1",
+    "tslint-eslint-rules": "^5.1.0",
+    "typescript": "2.6.2"
+  }
+}
