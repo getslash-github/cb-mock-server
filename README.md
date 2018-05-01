@@ -20,10 +20,9 @@ Considering the following directory structure:
     readme.txt.js
 /static/
   GET/
-    dir1/
-      test.img
-      readme
-    dir2/
+    files/
+      test.jpg
+      README
     users/
       index.json
       234.json
@@ -37,6 +36,8 @@ Considering the following directory structure:
 * `DELETE /groups` will execute the `/dynamic/groups/index.js` script
 * `GET /misc/readme.txt` will execute the `/dynamic/misc/readme.txt.js` script
 * `GET /users/` will return the `/static/users/index.json` file
+* `GET /files/test.jpg` will return the `/static/GET/files/test.jpg` file
+* `GET /files/README` will return the `/static/GET/files/README` file
 * `GET /users/234` will return the `/static/GET/users/234.json` file
 * `POST /users/234` will return the `/static/POST/users/234.json` file
 
