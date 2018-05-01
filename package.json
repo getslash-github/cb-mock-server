@@ -43,10 +43,12 @@
   "bin": "./bin/index.js",
   "typings": "lib/index.ts",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "express": "^4.16.3",
     "yargs": "^11.0.0"
   },
   "devDependencies": {
+    "@types/body-parser": "^1.17.0",
     "@types/express": "^4.11.1",
     "@types/jest": "^22.2.3",
     "@types/node": "^8.10.11",

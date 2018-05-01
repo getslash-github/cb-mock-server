@@ -2,6 +2,7 @@ import * as express from 'express';
 import { Request, Response } from 'express';
 import { existsSync, lstatSync } from 'fs';
 import { join as pJoin } from 'path';
+import * as bodyParser from 'body-parser';
 
 const argv = require('yargs').argv;
 
@@ -80,6 +81,11 @@ function handleDynamicFiles(req: Request, res: Response, path: string): boolean 
 
 
 const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
 app.all('/*', (req, res) => {
   const httpMethod = req.method;
   const path = req.path;
@@ -96,6 +102,5 @@ app.all('/*', (req, res) => {
     res.sendStatus(404);
   }
 });
-
 
 app.listen(port, () => console.log(`cb-mock-server listening on port ${port}!`));
