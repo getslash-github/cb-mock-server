@@ -4,11 +4,11 @@
     "moduleResolution": "node",
     "outDir": "./lib",
     "noImplicitAny": true,
-    "declaration": true,
+    "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es5",
-    "sourceMap": true,
+    "sourceMap": false,
     "typeRoots": [
       "node_modules/@types"
     ],
