@@ -3,8 +3,11 @@ import { Request, Response } from 'express';
 import { existsSync, lstatSync } from 'fs';
 import { join as pJoin } from 'path';
 
-const staticPath = pJoin(process.cwd(), 'test/static');
-const dynamicPath = pJoin(process.cwd(), 'test/dynamic');
+const argv = require('yargs').argv;
+
+const staticPath = pJoin(process.cwd(), argv.static || 'static');
+const dynamicPath = pJoin(process.cwd(), argv.dynamic || 'dynamic');
+const port = argv.port || 3000;
 
 function handleStaticFiles(res: Response, path: string): boolean {
   let filePath;
@@ -95,4 +98,4 @@ app.all('/*', (req, res) => {
 });
 
 
-app.listen(3000, () => console.log('Example app listening on port 3000!'));
+app.listen(port, () => console.log(`cb-mock-server listening on port ${port}!`));

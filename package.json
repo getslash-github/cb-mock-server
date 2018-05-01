@@ -19,7 +19,7 @@
     "lint": "tslint --project tslint.json src/**/*.ts",
     "test": "jest",
     "build": "npm run clean && npm run lint &&  npm run compile",
-    "serve": "ts-node src/main.ts"
+    "serve": "ts-node src/main.ts --static=test/static --dynamic=test/dynamic"
   },
   "jest": {
     "transform": {
@@ -43,7 +43,8 @@
   "bin": "./bin/index.js",
   "typings": "lib/index.ts",
   "dependencies": {
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "yargs": "^11.0.0"
   },
   "devDependencies": {
     "@types/express": "^4.11.1",
