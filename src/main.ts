@@ -1,12 +1,62 @@
 import * as express from 'express'
+import { Response } from 'express'
 import { existsSync, lstatSync } from 'fs';
 import { join as pJoin } from 'path';
-
-const app = express();
 
 const staticPath = pJoin(process.cwd(), 'test/static');
 const dynamicPath = pJoin(process.cwd(), 'test/dynamic');
 
+function handleStaticFiles(res: Response, path: string): boolean {
+  if (existsSync(path)) {
+    /**
+     * If the path exists and is a directory, we try to find an index or index.json file
+     */
+    if (lstatSync(path).isDirectory()) {
+      let filePath = pJoin(path, 'index');
+
+      if (existsSync(filePath)) {
+        res.sendFile(filePath);
+        return true;
+      }
+
+      filePath = pJoin(path, 'index.json');
+      if (existsSync(filePath)) {
+        res.sendFile(filePath);
+        return true;
+      }
+
+      // did not find index file in directory
+      return false;
+    }
+
+    /**
+     * If the path is a file, we return the file.
+     */
+    if (lstatSync(path).isFile()) {
+      res.sendFile(path);
+      return true;
+    }
+
+    // path exists but is not a regular file
+    return false;
+  }
+
+  // -- get static file with .json extension
+  let filePath = pJoin(path + '.json');
+  if (existsSync(filePath) && lstatSync(filePath).isFile()) {
+    res.sendFile(filePath);
+    return true;
+  }
+
+  return false;
+}
+
+function handleDynamicFiles(res: Response, path: string): boolean {
+  return false;
+}
+
+
+const app = express();
 app.all('/*', (req, res) => {
   console.log(req.path); // just path
 
@@ -15,50 +65,15 @@ app.all('/*', (req, res) => {
 
   // -- get static file
   let filePath = pJoin(staticPath, httpMethod, path);
-  if (existsSync(filePath)) {
-    /**
-     * If the path exists and is a directory, we try to find an index or index.json file
-     */
-    if (lstatSync(filePath).isDirectory()) {
-      filePath = pJoin(staticPath, httpMethod, path, 'index');
 
-      if (existsSync(filePath)) {
-        res.sendFile(filePath);
-        return;
-      }
-
-      filePath = pJoin(staticPath, httpMethod, path, 'index.json');
-      if (existsSync(filePath)) {
-        res.sendFile(filePath);
-        return;
-      }
-
-      // did not find index file in directory
-      res.sendStatus(404);
-      return;
-    }
-
-    /**
-     * If the path is a file, we return the file.
-     */
-    else if (lstatSync(filePath).isFile()) {
-      res.sendFile(filePath);
-      return;
-    } else {
-      // not a regular file
-      res.sendStatus(404);
-      return;
-    }
+  let handled = handleStaticFiles(res, pJoin(staticPath, httpMethod, path));
+  if (handled === false) {
+    handled = handleDynamicFiles(res, pJoin(dynamicPath, path));
   }
 
-  // -- get static file with .json extension
-  filePath = pJoin(staticPath, httpMethod, path + '.json');
-  if (existsSync(filePath)) {
-    res.sendFile(filePath);
-    return;
+  if (handled === false) {
+    res.sendStatus(404);
   }
-
-  res.sendStatus(404);
 });
 
 
