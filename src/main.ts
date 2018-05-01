@@ -1,31 +1,64 @@
 import * as express from 'express'
-import { lstatSync } from 'fs';
+import { existsSync, lstatSync } from 'fs';
 import { join as pJoin } from 'path';
 
 const app = express();
 
-const staticPath = pJoin(process.cwd() , 'test/static');
-const dynamicPath = pJoin(process.cwd() , 'test/dynamic');
+const staticPath = pJoin(process.cwd(), 'test/static');
+const dynamicPath = pJoin(process.cwd(), 'test/dynamic');
 
 app.all('/*', (req, res) => {
   console.log(req.path); // just path
 
   const httpMethod = req.method;
-  let path = req.path;
+  const path = req.path;
 
   // -- get static file
-  if (lstatSync(pJoin(staticPath, httpMethod, path)).isFile()) {
-    res.sendFile(pJoin(staticPath, httpMethod, path));
+  let filePath = pJoin(staticPath, httpMethod, path);
+  if (existsSync(filePath)) {
+    /**
+     * If the path exists and is a directory, we try to find an index or index.json file
+     */
+    if (lstatSync(filePath).isDirectory()) {
+      filePath = pJoin(staticPath, httpMethod, path, 'index');
+
+      if (existsSync(filePath)) {
+        res.sendFile(filePath);
+        return;
+      }
+
+      filePath = pJoin(staticPath, httpMethod, path, 'index.json');
+      if (existsSync(filePath)) {
+        res.sendFile(filePath);
+        return;
+      }
+
+      // did not find index file in directory
+      res.sendStatus(404);
+      return;
+    }
+
+    /**
+     * If the path is a file, we return the file.
+     */
+    else if (lstatSync(filePath).isFile()) {
+      res.sendFile(filePath);
+      return;
+    } else {
+      // not a regular file
+      res.sendStatus(404);
+      return;
+    }
+  }
+
+  // -- get static file with .json extension
+  filePath = pJoin(staticPath, httpMethod, path + '.json');
+  if (existsSync(filePath)) {
+    res.sendFile(filePath);
     return;
   }
 
-  // if(lstatSync(path).isDirectory()){
-  //   readFileSync(pJoin(path, 'index.js'),)
-  // } else ) {
-  //   readFileSync(pJoin(path, 'index.js'),)
-  // }
-
-  res.send('Hello World!');
+  res.sendStatus(404);
 });
 
 
