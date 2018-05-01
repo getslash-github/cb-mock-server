@@ -3,7 +3,7 @@
 The mock-server is able to serve the contents of two distinct directories:
 
 * `dynamic`: contains java script files that are executed
-* `static`: contains static files (in sub-folders) that are returned directly
+* `static`: contains static files and sub-folders that are returned directly and are separated by http request methods
 
 Files in the `dynamic` directory have a `.js` extensions.
 File in the `static` directory MAY have a `.json` extension.
