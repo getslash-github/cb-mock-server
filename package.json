@@ -18,7 +18,8 @@
     "compile": "tsc",
     "lint": "tslint --project tslint.json src/**/*.ts",
     "test": "jest",
-    "build": "npm run clean && npm run lint && npm run test && npm run compile"
+    "build": "npm run clean && npm run lint && npm run test && npm run compile",
+    "serve": "ts-node src/main.ts"
   },
   "jest": {
     "transform": {
@@ -39,11 +40,16 @@
   ],
   "main": "lib/index.ts",
   "typings": "lib/index.ts",
-  "dependencies": {},
+  "dependencies": {
+    "express": "^4.16.3"
+  },
   "devDependencies": {
+    "@types/express": "^4.11.1",
     "@types/jest": "^22.2.3",
+    "@types/node": "^8.10.11",
     "jest": "^22.4.3",
     "ts-jest": "^22.4.4",
+    "ts-node": "^6.0.2",
     "tslint": "^5.9.1",
     "tslint-eslint-rules": "^5.1.0",
     "typescript": "2.6.2"

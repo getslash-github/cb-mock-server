@@ -5,11 +5,13 @@
     "outDir": "./lib",
     "noImplicitAny": true,
     "declaration": true,
-    "module": "es2015",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es5",
     "sourceMap": true,
+    "typeRoots": [
+      "node_modules/@types"
+    ],
     "lib": [
       "es2015",
       "dom"
