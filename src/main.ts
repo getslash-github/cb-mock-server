@@ -58,10 +58,10 @@ function handleDynamicFiles(res: Response, path: string): boolean {
 
 const app = express();
 app.all('/*', (req, res) => {
-  console.log(req.path); // just path
-
   const httpMethod = req.method;
   const path = req.path;
+
+  console.log(httpMethod, path);
 
   // -- get static file
   let filePath = pJoin(staticPath, httpMethod, path);
