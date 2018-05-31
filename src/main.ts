@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { existsSync, lstatSync } from 'fs';
 import { join as pJoin } from 'path';
 import * as bodyParser from 'body-parser';
+import * as cookieParser from 'cookie-parser';
 
 const argv = require('yargs').argv;
 
@@ -87,6 +88,7 @@ app.use(bodyParser.text());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+app.use(cookieParser());
 
 app.all('/*', (req, res) => {
   const httpMethod = req.method;
