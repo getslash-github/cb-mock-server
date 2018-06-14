@@ -1,6 +1,6 @@
 {
-  "name": "cb-mock-server",
-  "version": "1.0.6",
+  "name": "@codebalancers/mock-server",
+  "version": "1.0.7",
   "description": "Mock server written in Typescript",
   "repository": {
     "type": "git",
@@ -42,6 +42,9 @@
   "main": "lib/main.js",
   "bin": "./bin/index.js",
   "typings": "lib/index.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "body-parser": "^1.18.2",
     "cookie-parser": "^1.4.3",
