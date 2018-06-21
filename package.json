@@ -1,6 +1,6 @@
 {
   "name": "@codebalancers/mock-server",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Mock server written in Typescript",
   "repository": {
     "type": "git",
