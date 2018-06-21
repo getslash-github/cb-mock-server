@@ -92,7 +92,7 @@ app.use(cookieParser());
 
 app.all('/*', (req, res) => {
   const httpMethod = req.method;
-  const path = req.path;
+  const path = decodeURI(req.path);
 
   console.log(httpMethod, path);
 
