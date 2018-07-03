@@ -1,6 +1,7 @@
 import * as express from 'express';
 import { Request, Response } from 'express';
 import { existsSync, lstatSync } from 'fs';
+import * as _path from 'path';
 import { join as pJoin } from 'path';
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
@@ -59,8 +60,10 @@ function handleStaticFiles(res: Response, path: string): boolean {
   return false;
 }
 
-function handleDynamicFiles(req: Request, res: Response, path: string): boolean {
+function handleDynamicFiles(req: Request, res: Response, path: string, basePath: string): boolean {
   let filePath;
+
+  // -- if the path is an existing directory, we try to open an index.js in that directory
   if (existsSync(path) && lstatSync(path).isDirectory()) {
     filePath = pJoin(path, 'index.js');
 
@@ -68,15 +71,26 @@ function handleDynamicFiles(req: Request, res: Response, path: string): boolean 
       require(filePath).handle(req, res);
       return true;
     }
-
-    // did not find index file in directory
-    return false;
+  } else { // -- if the path is not an directory, we assume it is a file and add a .js extension
+    filePath = pJoin(path + '.js');
+    if (existsSync(filePath) && lstatSync(filePath).isFile()) {
+      require(filePath).handle(req, res);
+      return true;
+    }
   }
 
-  filePath = pJoin(path + '.js');
-  if (existsSync(filePath) && lstatSync(filePath).isFile()) {
-    require(filePath).handle(req, res);
-    return true;
+  // -- now that neither a directory nor a file could be found, we fallback and try to find an index.js in parent dir
+  let parent = _path.dirname(path);
+
+  while (parent.startsWith(basePath)) {
+    if (existsSync(parent)
+      && lstatSync(parent).isDirectory()
+      && existsSync(pJoin(parent, 'index.js'))
+      && lstatSync(pJoin(parent, 'index.js')).isFile()) {
+      require(pJoin(parent, 'index.js')).handle(req, res);
+      return true;
+    }
+    parent = _path.dirname(parent);
   }
 
   return false;
@@ -99,7 +113,7 @@ app.all('/*', (req, res) => {
   // -- get static file
   let handled = handleStaticFiles(res, pJoin(staticPath, httpMethod, path));
   if (handled === false) {
-    handled = handleDynamicFiles(req, res, pJoin(dynamicPath, path));
+    handled = handleDynamicFiles(req, res, pJoin(dynamicPath, path), dynamicPath);
   }
 
   if (handled === false) {
