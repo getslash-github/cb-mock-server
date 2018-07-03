@@ -60,6 +60,15 @@ function handleStaticFiles(res: Response, path: string): boolean {
   return false;
 }
 
+/**
+ * Handle request with dynamic scripts.
+ *
+ * @param {e.Request} req incoming request
+ * @param {e.Response} res outgoinng response
+ * @param {string} path the full path that is requested
+ * @param {string} basePath the path to the directory that contains the script
+ * @returns {boolean} true if the request was handled
+ */
 function handleDynamicFiles(req: Request, res: Response, path: string, basePath: string): boolean {
   let filePath;
 
