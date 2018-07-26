@@ -107,6 +107,7 @@ function handleDynamicFiles(req: Request, res: Response, path: string, basePath:
 
 
 const app = express();
+app.use(bodyParser.json());
 app.use(bodyParser.text());
 app.use(bodyParser.urlencoded({
   extended: true
