@@ -5,11 +5,18 @@ import * as _path from 'path';
 import { join as pJoin } from 'path';
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
+import * as _ from 'lodash';
 
 const argv = require('yargs').argv;
 
-const staticPath = pJoin(process.cwd(), argv.static || 'static');
-const dynamicPath = pJoin(process.cwd(), argv.dynamic || 'dynamic');
+const staticPath = _.startsWith(argv.static, '/')
+  ? argv.static
+  : pJoin(process.cwd(), argv.static || 'static');
+
+const dynamicPath = _.startsWith(argv.dynamic, '/')
+  ? argv.dynamic
+  : pJoin(process.cwd(), argv.dynamic || 'dynamic');
+
 const port = argv.port || 3000;
 
 function handleStaticFiles(res: Response, path: string): boolean {
