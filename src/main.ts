@@ -124,8 +124,13 @@ app.use(cookieParser());
 app.all('/*', (req, res) => {
   const httpMethod = req.method;
   const path = decodeURI(req.path);
-
-  console.log(httpMethod, path);
+  let onlyShowLogging = false;
+  if(req.url.indexOf('logging') !== -1) {
+    const body = req.body as any;
+    if(body['onlyShowLogging'] !== undefined) onlyShowLogging = body['onlyShowLogging'] as boolean;
+    console.log('Log:', JSON.stringify(req.body['message']));
+  }
+  if(!onlyShowLogging) console.log(httpMethod, path);
 
   // -- get static file
   let handled = handleStaticFiles(res, pJoin(staticPath, httpMethod, path));
