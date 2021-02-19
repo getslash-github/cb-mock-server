@@ -15,6 +15,7 @@ var dynamicPath = _.startsWith(argv.dynamic, '/')
     ? argv.dynamic
     : path_1.join(process.cwd(), argv.dynamic || 'dynamic');
 var port = argv.port || 3000;
+var onlyShowLogging = false;
 function handleStaticFiles(res, path) {
     var filePath;
     if (fs_1.existsSync(path)) {
@@ -104,7 +105,6 @@ app.use(cookieParser());
 app.all('/*', function (req, res) {
     var httpMethod = req.method;
     var path = decodeURI(req.path);
-    var onlyShowLogging = false;
     if (req.url.indexOf('logging') !== -1) {
         var body = req.body;
         if (body['onlyShowLogging'] !== undefined)

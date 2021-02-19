@@ -19,6 +19,8 @@ const dynamicPath = _.startsWith(argv.dynamic, '/')
 
 const port = argv.port || 3000;
 
+let onlyShowLogging = false;
+
 function handleStaticFiles(res: Response, path: string): boolean {
   let filePath;
 
@@ -124,7 +126,7 @@ app.use(cookieParser());
 app.all('/*', (req, res) => {
   const httpMethod = req.method;
   const path = decodeURI(req.path);
-  let onlyShowLogging = false;
+
   if(req.url.indexOf('logging') !== -1) {
     const body = req.body as any;
     if(body['onlyShowLogging'] !== undefined) onlyShowLogging = body['onlyShowLogging'] as boolean;
