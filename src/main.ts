@@ -7,6 +7,11 @@ import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import * as _ from 'lodash';
 
+process.on('SIGTERM', async () => {
+  console.log('EXITING GRACEFULLY...')
+  process.exit(0)
+})
+
 const argv = require('yargs').argv;
 
 const staticPath = _.startsWith(argv.static, '/')
