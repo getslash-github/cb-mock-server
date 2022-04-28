@@ -8,9 +8,9 @@ import * as cookieParser from 'cookie-parser';
 import * as _ from 'lodash';
 
 process.on('SIGTERM', async () => {
-  console.log('EXITING GRACEFULLY...')
-  process.exit(0)
-})
+  console.log('EXITING GRACEFULLY...');
+  process.exit(0);
+});
 
 const argv = require('yargs').argv;
 
@@ -53,9 +53,9 @@ function handleStaticFiles(res: Response, path: string): boolean {
     }
 
     /**
-     * If the path is a file, we return the file.
+     * If the path is a file (or a symlinked file), we return the file.
      */
-    if (lstatSync(path).isFile()) {
+    if (lstatSync(path).isFile() || lstatSync(path).isSymbolicLink()) {
       res.sendFile(path);
       return true;
     }
@@ -132,12 +132,12 @@ app.all('/*', (req, res) => {
   const httpMethod = req.method;
   const path = decodeURI(req.path);
 
-  if(req.url.indexOf('logging') !== -1) {
+  if (req.url.indexOf('logging') !== -1) {
     const body = req.body as any;
-    if(body['onlyShowLogging'] !== undefined) onlyShowLogging = body['onlyShowLogging'] as boolean;
+    if (body['onlyShowLogging'] !== undefined) { onlyShowLogging = body['onlyShowLogging'] as boolean; }
     console.log('Log:', JSON.stringify(req.body['message']));
   }
-  if(!onlyShowLogging) console.log(httpMethod, path);
+  if (!onlyShowLogging) { console.log(httpMethod, path); }
 
   // -- get static file
   let handled = handleStaticFiles(res, pJoin(staticPath, httpMethod, path));

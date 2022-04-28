@@ -81,9 +81,9 @@ function handleStaticFiles(res, path) {
             return false;
         }
         /**
-         * If the path is a file, we return the file.
+         * If the path is a file (or a symlinked file), we return the file.
          */
-        if ((0, fs_1.lstatSync)(path).isFile()) {
+        if ((0, fs_1.lstatSync)(path).isFile() || (0, fs_1.lstatSync)(path).isSymbolicLink()) {
             res.sendFile(path);
             return true;
         }
