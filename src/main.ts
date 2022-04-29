@@ -66,7 +66,10 @@ function handleStaticFiles(res: Response, path: string): boolean {
 
   // -- get static file with .json extension
   filePath = pJoin(path + '.json');
-  if (existsSync(filePath) && lstatSync(filePath).isFile()) {
+  if (
+    existsSync(filePath) &&
+    (lstatSync(filePath).isFile() || lstatSync(filePath).isSymbolicLink())
+  ) {
     res.sendFile(filePath);
     return true;
   }
@@ -105,7 +108,7 @@ function handleDynamicFiles(req: Request, res: Response, path: string, basePath:
   // -- now that neither a directory nor a file could be found, we fallback and try to find an index.js in parent dir
   let parent = _path.dirname(path);
 
-  while (parent.startsWith(basePath)) {
+  while (_.startsWith(parent, basePath)) {
     if (existsSync(parent)
       && lstatSync(parent).isDirectory()
       && existsSync(pJoin(parent, 'index.js'))

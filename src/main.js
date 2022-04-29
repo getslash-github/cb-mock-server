@@ -92,7 +92,8 @@ function handleStaticFiles(res, path) {
     }
     // -- get static file with .json extension
     filePath = (0, path_1.join)(path + '.json');
-    if ((0, fs_1.existsSync)(filePath) && (0, fs_1.lstatSync)(filePath).isFile()) {
+    if ((0, fs_1.existsSync)(filePath) &&
+        ((0, fs_1.lstatSync)(filePath).isFile() || (0, fs_1.lstatSync)(filePath).isSymbolicLink())) {
         res.sendFile(filePath);
         return true;
     }
@@ -126,7 +127,7 @@ function handleDynamicFiles(req, res, path, basePath) {
     }
     // -- now that neither a directory nor a file could be found, we fallback and try to find an index.js in parent dir
     var parent = _path.dirname(path);
-    while (parent.startsWith(basePath)) {
+    while (_.startsWith(parent, basePath)) {
         if ((0, fs_1.existsSync)(parent)
             && (0, fs_1.lstatSync)(parent).isDirectory()
             && (0, fs_1.existsSync)((0, path_1.join)(parent, 'index.js'))
@@ -150,12 +151,14 @@ app.all('/*', function (req, res) {
     var path = decodeURI(req.path);
     if (req.url.indexOf('logging') !== -1) {
         var body = req.body;
-        if (body['onlyShowLogging'] !== undefined)
+        if (body['onlyShowLogging'] !== undefined) {
             onlyShowLogging = body['onlyShowLogging'];
+        }
         console.log('Log:', JSON.stringify(req.body['message']));
     }
-    if (!onlyShowLogging)
+    if (!onlyShowLogging) {
         console.log(httpMethod, path);
+    }
     // -- get static file
     var handled = handleStaticFiles(res, (0, path_1.join)(staticPath, httpMethod, path));
     if (handled === false) {
@@ -165,4 +168,4 @@ app.all('/*', function (req, res) {
         res.sendStatus(404);
     }
 });
-app.listen(port, function () { return console.log("cb-mock-server listening on port " + port + "!"); });
+app.listen(port, function () { return console.log("cb-mock-server listening on port ".concat(port, "!")); });
